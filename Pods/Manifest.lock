@@ -27,9 +27,10 @@ PODS:
 
 DEPENDENCIES:
   - Crashlytics (~> 3.9.3)
-  - Eureka
+  - Eureka (~> 4.1.1)
   - Fabric (~> 1.7.2)
   - Firebase/Core
+  - SwiftDate
   - SwiftDate (~> 4.0)
 
 SPEC REPOS:
@@ -57,6 +58,6 @@ SPEC CHECKSUMS:
   nanopb: 5601e6bca2dbf1ed831b519092ec110f66982ca3
   SwiftDate: 131cf2f09b390f0a07f0099e36005ffe2fbf4c7e
 
-PODFILE CHECKSUM: 38594bc0c0c6de97c7bf170f5d5cb81e704f5f28
+PODFILE CHECKSUM: e55e28904ee571625fad02489999ff74dafdc490
 
 COCOAPODS: 1.5.0

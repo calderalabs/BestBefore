@@ -11,4 +11,5 @@ target 'BestBefore' do
   pod 'Fabric', '~> 1.7.2'
   pod 'Crashlytics', '~> 3.9.3'
   pod 'Eureka', '~> 4.1.1'
+  pod 'SwiftDate', '~> 4.0'
 end
