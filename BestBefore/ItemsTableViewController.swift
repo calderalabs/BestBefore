@@ -130,15 +130,3 @@ class ItemsTableViewController: UITableViewController {
     }
 }
 
-extension ItemsTableViewController: NewItemDelegate {
-    func addItem(picture: UIImage?, days: Int?) {
-        if let picture = picture, let days = days {
-            let expiresAt = Date() + days.days
-            addNewItem(picture: picture, expiresAt: expiresAt)
-        } else {
-            print("No values selected in the form")
-        }
-    }
-}
-
-

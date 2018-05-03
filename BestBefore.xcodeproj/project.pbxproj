@@ -16,7 +16,6 @@
 		513BCDBB2021B138004B8E09 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 513BCDBA2021B138004B8E09 /* GoogleService-Info.plist */; };
 		513BCDBE2021B235004B8E09 /* ItemsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 513BCDBD2021B235004B8E09 /* ItemsTableViewController.swift */; };
 		513BCDC02021B2DB004B8E09 /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = 513BCDBF2021B2DB004B8E09 /* Item.swift */; };
-		513BCDC22021B31D004B8E09 /* NewItemViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 513BCDC12021B31D004B8E09 /* NewItemViewController.swift */; };
 		7745D81CB4AD8657E4B33277 /* Pods_BestBefore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A2973092FE06787950D59DE0 /* Pods_BestBefore.framework */; };
 /* End PBXBuildFile section */
 
@@ -33,7 +32,6 @@
 		513BCDBA2021B138004B8E09 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		513BCDBD2021B235004B8E09 /* ItemsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemsTableViewController.swift; sourceTree = "<group>"; };
 		513BCDBF2021B2DB004B8E09 /* Item.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Item.swift; sourceTree = "<group>"; };
-		513BCDC12021B31D004B8E09 /* NewItemViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewItemViewController.swift; sourceTree = "<group>"; };
 		A2973092FE06787950D59DE0 /* Pods_BestBefore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_BestBefore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E271626CC98318D27BA32D2E /* Pods-BestBefore.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BestBefore.debug.xcconfig"; path = "Pods/Target Support Files/Pods-BestBefore/Pods-BestBefore.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -87,7 +85,6 @@
 				513BCDB22021AD1B004B8E09 /* Info.plist */,
 				513BCDBD2021B235004B8E09 /* ItemsTableViewController.swift */,
 				513BCDBF2021B2DB004B8E09 /* Item.swift */,
-				513BCDC12021B31D004B8E09 /* NewItemViewController.swift */,
 				476688412099FED100BA3CCB /* NewItemFormViewController.swift */,
 				47668843209A027800BA3CCB /* ImageRow.swift */,
 				47668845209A029A00BA3CCB /* ImagePickerController.swift */,
@@ -237,7 +234,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				513BCDC02021B2DB004B8E09 /* Item.swift in Sources */,
-				513BCDC22021B31D004B8E09 /* NewItemViewController.swift in Sources */,
 				47668844209A027800BA3CCB /* ImageRow.swift in Sources */,
 				476688422099FED100BA3CCB /* NewItemFormViewController.swift in Sources */,
 				513BCDA72021AD1B004B8E09 /* AppDelegate.swift in Sources */,

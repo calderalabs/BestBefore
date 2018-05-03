@@ -10,7 +10,14 @@ import UIKit
 import Eureka
 import SwiftDate
 
-class NewItemFormViewController: FormViewController {
+class NewItemFormViewController: FormViewController, UINavigationControllerDelegate {
+    @IBAction func cancel(_ sender: UIBarButtonItem) {
+        dismiss(animated: true, completion: nil)
+    }
+    
+    @IBAction func save(_ sender: UIBarButtonItem) {
+        dismiss(animated: true, completion: nil)
+    }
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -24,22 +31,25 @@ class NewItemFormViewController: FormViewController {
                     row.title = "Photo"
                     row.sourceTypes = [.Camera]
                 }
-                <<< SwitchRow("exactDateSwitch") { row in
-                    row.title = "Specify Expiration Date"
-                }
-            +++ Section("Best Before")
+            +++ Section("Expiration")
                 <<< DateRow("expirationDateRow"){ row in
                     row.title = "Expiration Date"
                     row.value = Date()
                 }.onChange{ row in
+                    if self.shouldSkipOnChange {
+                        return
+                    }
                     let daysRow = self.form.rowBy(tag: "daysRow") as? IntRow
                     let monthsRow = self.form.rowBy(tag: "monthsRow") as? IntRow
                     let yearsRow = self.form.rowBy(tag: "yearsRow") as? IntRow
                     let expirationInterval = row.value! - Date()
                     
-                    daysRow?.value = expirationInterval.in(.day)!
-                    monthsRow?.value = expirationInterval.in(.month)!
-                    yearsRow?.value = expirationInterval.in(.year)!
+                    let components = expirationInterval.in([.day, .month, .year])
+                    self.shouldSkipOnChange = true
+                    daysRow?.value = components[.day]
+                    monthsRow?.value = components[.month]
+                    yearsRow?.value = components[.year]
+                    self.shouldSkipOnChange = false
                     daysRow?.updateCell()
                     monthsRow?.updateCell()
                     yearsRow?.updateCell()
@@ -58,7 +68,7 @@ class NewItemFormViewController: FormViewController {
         let days = (form.rowBy(tag: "daysRow") as? IntRow)?.value ?? 0
         let months = (form.rowBy(tag: "monthsRow") as? IntRow)?.value ?? 0
         let years = (form.rowBy(tag: "yearsRow") as? IntRow)?.value ?? 0
-        return Date() + (days + 1).days + months.months + years.years
+        return ((days + 1).days + months.months + years.years).fromNow()!
     }
     
     private func intervalRow(title: String, tag: String) -> IntRow {
@@ -66,11 +76,18 @@ class NewItemFormViewController: FormViewController {
             row.title = title
             row.value = 0
         }.onChange{ row in
+            if self.shouldSkipOnChange {
+                return
+            }
+            self.shouldSkipOnChange = true
             let expirationDateRow = self.form.rowBy(tag: "expirationDateRow") as? DateRow
             expirationDateRow?.value = self.computeAbsoluteDate()
             expirationDateRow?.updateCell()
+            self.shouldSkipOnChange = false
         }
     }
+    
+    private var shouldSkipOnChange = false
     
     
     /*

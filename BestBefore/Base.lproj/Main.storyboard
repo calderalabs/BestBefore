@@ -90,8 +90,16 @@
                         <viewLayoutGuide key="safeArea" id="a4h-WY-fUd"/>
                     </view>
                     <navigationItem key="navigationItem" title="Title" id="xaX-Gq-hf6">
-                        <barButtonItem key="leftBarButtonItem" systemItem="cancel" id="gjz-0e-fYG"/>
-                        <barButtonItem key="rightBarButtonItem" systemItem="save" id="vRH-9h-a7s"/>
+                        <barButtonItem key="leftBarButtonItem" systemItem="cancel" id="gjz-0e-fYG">
+                            <connections>
+                                <action selector="cancel:" destination="Dgk-Fx-JBr" id="VIW-s6-WBg"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" systemItem="save" id="vRH-9h-a7s">
+                            <connections>
+                                <action selector="save:" destination="Dgk-Fx-JBr" id="9fl-nQ-FzO"/>
+                            </connections>
+                        </barButtonItem>
                     </navigationItem>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="b4q-xE-Ni5" userLabel="First Responder" sceneMemberID="firstResponder"/>
