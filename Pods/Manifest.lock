@@ -1,4 +1,5 @@
 PODS:
+  - BarcodeScanner (4.1.3)
   - Crashlytics (3.9.3):
     - Fabric (~> 1.7.2)
   - Eureka (4.1.1)
@@ -26,15 +27,16 @@ PODS:
   - SwiftDate (4.4.2)
 
 DEPENDENCIES:
+  - BarcodeScanner
   - Crashlytics (~> 3.9.3)
   - Eureka (~> 4.1.1)
   - Fabric (~> 1.7.2)
   - Firebase/Core
-  - SwiftDate
   - SwiftDate (~> 4.0)
 
 SPEC REPOS:
   https://github.com/CocoaPods/Specs.git:
+    - BarcodeScanner
     - Crashlytics
     - Eureka
     - Fabric
@@ -47,6 +49,7 @@ SPEC REPOS:
     - SwiftDate
 
 SPEC CHECKSUMS:
+  BarcodeScanner: fce1ad2b3f28286b1ab5091fe0979789618bee27
   Crashlytics: dbb07d01876c171c5ccbdf7826410380189e452c
   Eureka: b88fb930e42c79f8c03c373d0fcdc28c1d6c50ed
   Fabric: 9cd6a848efcf1b8b07497e0b6a2e7d336353ba15
@@ -58,6 +61,6 @@ SPEC CHECKSUMS:
   nanopb: 5601e6bca2dbf1ed831b519092ec110f66982ca3
   SwiftDate: 131cf2f09b390f0a07f0099e36005ffe2fbf4c7e
 
-PODFILE CHECKSUM: e55e28904ee571625fad02489999ff74dafdc490
+PODFILE CHECKSUM: 395e9092fa19f8717d10461c040c45d65aeca3bc
 
 COCOAPODS: 1.5.0

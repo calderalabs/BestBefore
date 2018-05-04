@@ -9,8 +9,13 @@
 import UIKit
 import Eureka
 import SwiftDate
+import BarcodeScanner
 
-class NewItemFormViewController: FormViewController, UINavigationControllerDelegate {
+class NewItemFormViewController: FormViewController, UINavigationControllerDelegate, BarcodeScannerCodeDelegate {
+    func scanner(_ controller: BarcodeScannerViewController, didCaptureCode code: String, type: String) {
+        
+    }
+    
     @IBAction func cancel(_ sender: UIBarButtonItem) {
         dismiss(animated: true, completion: nil)
     }
@@ -18,10 +23,19 @@ class NewItemFormViewController: FormViewController, UINavigationControllerDeleg
     @IBAction func save(_ sender: UIBarButtonItem) {
         dismiss(animated: true, completion: nil)
     }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         form
+            +++ ButtonRow() { row in
+                    row.title = "Populate from bar code..."
+                }.onCellSelection({ (cell, row) in
+                    let viewController = BarcodeScannerViewController()
+                    viewController.codeDelegate = self
+                    
+                    self.present(viewController, animated: true, completion: nil)
+                })
             +++ Section("Details")
                 <<< TextRow(){ row in
                     row.title = "Name"

@@ -79,7 +79,7 @@
             </objects>
             <point key="canvasLocation" x="659.20000000000005" y="116.94152923538232"/>
         </scene>
-        <!--Title-->
+        <!--Add Item-->
         <scene sceneID="aGX-dY-50T">
             <objects>
                 <viewController id="Dgk-Fx-JBr" customClass="NewItemFormViewController" customModule="BestBefore" customModuleProvider="target" sceneMemberID="viewController">
@@ -89,7 +89,7 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <viewLayoutGuide key="safeArea" id="a4h-WY-fUd"/>
                     </view>
-                    <navigationItem key="navigationItem" title="Title" id="xaX-Gq-hf6">
+                    <navigationItem key="navigationItem" title="Add Item" id="xaX-Gq-hf6">
                         <barButtonItem key="leftBarButtonItem" systemItem="cancel" id="gjz-0e-fYG">
                             <connections>
                                 <action selector="cancel:" destination="Dgk-Fx-JBr" id="VIW-s6-WBg"/>
