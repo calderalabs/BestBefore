@@ -11,24 +11,31 @@ import SwiftDate
 import os.log
 
 class ItemTableViewCell: UITableViewCell {
-    @IBOutlet weak var detailsLabel: UILabel!
-    @IBOutlet weak var picture: UIImageView!
-    
     var expiresAt: Date!
     
     public func updateDetails() {
         if expiresAt > Date() {
             let expirationInterval = expiresAt - Date()
             let days = expirationInterval.in(.day)!
-            detailsLabel.text = "Expires in: \(days + 1) days"
+            detailTextLabel?.text = "Expires in: \(days + 1) days"
         } else {
-            detailsLabel.text = "Expired!"
+            detailTextLabel?.text = "Expired!"
         }
     }
 }
 
 class ItemsTableViewController: UITableViewController {
     private var items = [Item]()
+    
+    @IBAction func unwindFromModal(unwindSegue: UIStoryboardSegue) {
+        if let sourceViewController = unwindSegue.source as? NewItemFormViewController, let item = sourceViewController.newItem {
+            items.append(item)
+            self.items = items.sorted { $0.expiresAt < $1.expiresAt }
+            let newIndex = items.index(of: item)!
+            tableView.insertRows(at: [IndexPath(row: newIndex, section: 0)], with: .top)
+            saveItems()
+        }
+    }
     
     //MARK: initialization
     
@@ -39,6 +46,7 @@ class ItemsTableViewController: UITableViewController {
             items += savedItems
         }
     }
+    
     
     //MARK: timer
     
@@ -80,12 +88,12 @@ class ItemsTableViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell
     {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell_item", for: indexPath) as! ItemTableViewCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: "itemCell", for: indexPath) as! ItemTableViewCell
         
         if indexPath.row < items.count
         {
             let item = items[indexPath.row]
-            cell.picture.image = item.picture
+            cell.textLabel?.text = item.name
             cell.expiresAt = item.expiresAt
             cell.updateDetails()
         }
@@ -104,16 +112,6 @@ class ItemsTableViewController: UITableViewController {
     }
     
     //MARK: Private Methods
-    
-    private func addNewItem(picture: UIImage, expiresAt: Date)
-    {
-        let item = Item(picture: picture, expiresAt: expiresAt)
-        items.append(item)
-        self.items = items.sorted { $0.expiresAt < $1.expiresAt }
-        let newIndex = items.index(of: item)!
-        tableView.insertRows(at: [IndexPath(row: newIndex, section: 0)], with: .top)
-        saveItems()
-    }
     
     private func saveItems() {
         let isSuccessfulSave = NSKeyedArchiver.archiveRootObject(items, toFile: Item.ArchiveURL.path)
