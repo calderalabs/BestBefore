@@ -146,6 +146,7 @@ class ItemsTableViewController: UITableViewController {
     }
     
     private func addItemPrototype(_ prototype: ItemPrototype) {
+        itemPrototypes.remove(prototype)
         itemPrototypes.insert(prototype)
         saveItemPrototypes()
     }

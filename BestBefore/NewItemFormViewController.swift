@@ -30,9 +30,21 @@ class NewItemFormViewController: FormViewController, UINavigationControllerDeleg
                 return prototype.code == code
             }) {
                 let expiresAt = Date().startOfDay.addingTimeInterval(itemPrototype.interval)
-                (form.rowBy(tag: "nameRow") as? TextRow)?.value = itemPrototype.name
-                (form.rowBy(tag: "pictureRow") as? ImageRow)?.value = itemPrototype.picture
-                (form.rowBy(tag: "expirationDateRow") as? DateRow)?.value = expiresAt
+                
+                if let nameRow = (form.rowBy(tag: "nameRow") as? TextRow) {
+                    nameRow.value = itemPrototype.name
+                    nameRow.updateCell()
+                }
+                
+                if let pictureRow = (form.rowBy(tag: "pictureRow") as? ImageRow) {
+                    pictureRow.value = itemPrototype.picture
+                    pictureRow.updateCell()
+                }
+                
+                if let expirationDateRow = (form.rowBy(tag: "expirationDateRow") as? DateRow) {
+                    expirationDateRow.value = expiresAt
+                    expirationDateRow.updateCell()
+                }
             }
         }
         

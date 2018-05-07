@@ -76,7 +76,9 @@ class ItemPrototype: NSObject, NSCoding
             return nil
         }
         
-        guard let interval = aDecoder.decodeObject(forKey: PropertyKey.interval) as? TimeInterval else {
+        let interval = aDecoder.decodeDouble(forKey: PropertyKey.interval)
+        
+        if interval == 0.0 {
             os_log("Unable to decode the interval for a ItemPrototype object.", log: OSLog.default, type: .debug)
             return nil
         }
