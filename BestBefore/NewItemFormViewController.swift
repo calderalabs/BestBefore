@@ -27,7 +27,7 @@ class NewItemFormViewController: FormViewController, UINavigationControllerDeleg
         
         if let itemPrototypes = itemPrototypes {
             if let itemPrototype = itemPrototypes.first(where: { prototype in
-                prototype.code == code
+                return prototype.code == code
             }) {
                 let expiresAt = Date().startOfDay.addingTimeInterval(itemPrototype.interval)
                 (form.rowBy(tag: "nameRow") as? TextRow)?.value = itemPrototype.name

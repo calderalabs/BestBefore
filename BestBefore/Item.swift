@@ -58,10 +58,7 @@ class Item: NSObject, NSCoding
             return nil
         }
         
-        guard let picture = aDecoder.decodeObject(forKey: PropertyKey.picture) as? UIImage else {
-            os_log("Unable to decode the picture for a Item object.", log: OSLog.default, type: .debug)
-            return nil
-        }
+        let picture = aDecoder.decodeObject(forKey: PropertyKey.picture) as? UIImage
         
         self.init(name: name, picture: picture, expiresAt: expiresAt)
     }
