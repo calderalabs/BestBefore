@@ -35,6 +35,8 @@ class NewItemFormViewController: FormViewController, UINavigationControllerDeleg
                 (form.rowBy(tag: "expirationDateRow") as? DateRow)?.value = expiresAt
             }
         }
+        
+        controller.dismiss(animated: false, completion: nil)
     }
     
     @IBAction func cancel(_ sender: UIBarButtonItem) {

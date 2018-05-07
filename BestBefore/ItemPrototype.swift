@@ -65,22 +65,22 @@ class ItemPrototype: NSObject, NSCoding
     
     required convenience init?(coder aDecoder: NSCoder) {
         guard let name = aDecoder.decodeObject(forKey: PropertyKey.name) as? String else {
-            os_log("Unable to decode the name for a Item object.", log: OSLog.default, type: .debug)
+            os_log("Unable to decode the name for a ItemPrototype object.", log: OSLog.default, type: .debug)
             return nil
         }
         
         guard let interval = aDecoder.decodeObject(forKey: PropertyKey.interval) as? TimeInterval else {
-            os_log("Unable to decode the interval for a Item object.", log: OSLog.default, type: .debug)
+            os_log("Unable to decode the interval for a ItemPrototype object.", log: OSLog.default, type: .debug)
             return nil
         }
         
         guard let picture = aDecoder.decodeObject(forKey: PropertyKey.picture) as? UIImage else {
-            os_log("Unable to decode the picture for a Item object.", log: OSLog.default, type: .debug)
+            os_log("Unable to decode the picture for a ItemPrototype object.", log: OSLog.default, type: .debug)
             return nil
         }
         
         guard let code = aDecoder.decodeObject(forKey: PropertyKey.code) as? String else {
-            os_log("Unable to decode the code for a Item object.", log: OSLog.default, type: .debug)
+            os_log("Unable to decode the code for a ItemPrototype object.", log: OSLog.default, type: .debug)
             return nil
         }
         
