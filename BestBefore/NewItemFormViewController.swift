@@ -14,7 +14,9 @@ import BarcodeScanner
 class NewItemFormViewController: FormViewController, UINavigationControllerDelegate, BarcodeScannerCodeDelegate, BarcodeScannerDismissalDelegate {
     @IBOutlet weak var saveButton: UIBarButtonItem!
     var newItem: Item?
+    var newItemPrototype: ItemPrototype?
     var code: String?
+    var itemPrototypes: Set<ItemPrototype>?
     
     func scannerDidDismiss(_ controller: BarcodeScannerViewController) {
         controller.dismiss(animated: true, completion: nil)
@@ -22,6 +24,17 @@ class NewItemFormViewController: FormViewController, UINavigationControllerDeleg
     
     func scanner(_ controller: BarcodeScannerViewController, didCaptureCode code: String, type: String) {
         self.code = code
+        
+        if let itemPrototypes = itemPrototypes {
+            if let itemPrototype = itemPrototypes.first(where: { prototype in
+                prototype.code == code
+            }) {
+                let expiresAt = Date().startOfDay.addingTimeInterval(itemPrototype.interval)
+                (form.rowBy(tag: "nameRow") as? TextRow)?.value = itemPrototype.name
+                (form.rowBy(tag: "pictureRow") as? ImageRow)?.value = itemPrototype.picture
+                (form.rowBy(tag: "expirationDateRow") as? DateRow)?.value = expiresAt
+            }
+        }
     }
     
     @IBAction func cancel(_ sender: UIBarButtonItem) {
@@ -103,6 +116,14 @@ class NewItemFormViewController: FormViewController, UINavigationControllerDeleg
         
         updateSaveButton()
         updateIntervalRows()
+        
+        if let savedItemPrototypes = loadItemPrototypes() {
+            itemPrototypes = savedItemPrototypes
+        }
+    }
+    
+    private func loadItemPrototypes() -> Set<ItemPrototype>? {
+        return NSKeyedUnarchiver.unarchiveObject(withFile: ItemPrototype.ArchiveURL.path) as? Set<ItemPrototype>
     }
     
     override func didReceiveMemoryWarning() {
@@ -120,7 +141,11 @@ class NewItemFormViewController: FormViewController, UINavigationControllerDeleg
         let name = (form.rowBy(tag: "nameRow") as! TextRow).value!
         let picture = (form.rowBy(tag: "pictureRow") as! ImageRow).value
         let expiresAt = (form.rowBy(tag: "expirationDateRow") as! DateRow).value!
-        newItem = Item(name: name, picture: picture, expiresAt: expiresAt.startOfDay, code: code)
+        newItem = Item(name: name, picture: picture, expiresAt: expiresAt.startOfDay)
+        
+        if let code = code {
+            newItemPrototype = ItemPrototype(name: name, picture: picture, interval: expiresAt.startOfDay - Date().startOfDay, code: code)
+        }
     }
     
     private func computeAbsoluteDate() -> Date {
@@ -147,16 +172,4 @@ class NewItemFormViewController: FormViewController, UINavigationControllerDeleg
     }
     
     private var shouldSkipOnChange = false
-    
-    
-    /*
-     // MARK: - Navigation
-     
-     // In a storyboard-based application, you will often want to do a little preparation before navigation
-     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-     // Get the new view controller using segue.destinationViewController.
-     // Pass the selected object to the new view controller.
-     }
-     */
-    
 }

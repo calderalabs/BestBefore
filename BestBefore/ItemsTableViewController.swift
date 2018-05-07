@@ -26,9 +26,13 @@ class ItemTableViewCell: UITableViewCell {
 
 class ItemsTableViewController: UITableViewController {
     private var items = [Item]()
+    private var itemPrototypes = Set<ItemPrototype>()
     
     @IBAction func unwindFromModal(unwindSegue: UIStoryboardSegue) {
         if let sourceViewController = unwindSegue.source as? NewItemFormViewController, let item = sourceViewController.newItem {
+            if let itemPrototype = sourceViewController.newItemPrototype {
+                addItemPrototype(itemPrototype)
+            }
             items.append(item)
             self.items = items.sorted { $0.expiresAt < $1.expiresAt }
             let newIndex = items.index(of: item)!
@@ -44,6 +48,10 @@ class ItemsTableViewController: UITableViewController {
         
         if let savedItems = loadItems() {
             items += savedItems
+        }
+        
+        if let savedItemPrototypes = loadItemPrototypes() {
+            itemPrototypes = savedItemPrototypes
         }
     }
     
@@ -123,8 +131,27 @@ class ItemsTableViewController: UITableViewController {
         }
     }
     
+    private func saveItemPrototypes() {
+        let isSuccessfulSave = NSKeyedArchiver.archiveRootObject(itemPrototypes, toFile: ItemPrototype.ArchiveURL.path)
+        
+        if isSuccessfulSave {
+            os_log("Item prototypes successfully saved.", log: OSLog.default, type: .debug)
+        } else {
+            os_log("Failed to save item prototypes...", log: OSLog.default, type: .error)
+        }
+    }
+    
     private func loadItems() -> [Item]? {
         return NSKeyedUnarchiver.unarchiveObject(withFile: Item.ArchiveURL.path) as? [Item]
+    }
+    
+    private func addItemPrototype(_ prototype: ItemPrototype) {
+        itemPrototypes.insert(prototype)
+        saveItemPrototypes()
+    }
+    
+    private func loadItemPrototypes() -> Set<ItemPrototype>? {
+        return NSKeyedUnarchiver.unarchiveObject(withFile: ItemPrototype.ArchiveURL.path) as? Set<ItemPrototype>
     }
 }
 
