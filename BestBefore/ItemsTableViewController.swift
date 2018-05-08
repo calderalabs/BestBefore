@@ -9,6 +9,7 @@
 import UIKit
 import SwiftDate
 import os.log
+import UserNotifications
 
 class ItemTableViewCell: UITableViewCell {
     var expiresAt: Date!
@@ -38,6 +39,7 @@ class ItemsTableViewController: UITableViewController {
             let newIndex = items.index(of: item)!
             tableView.insertRows(at: [IndexPath(row: newIndex, section: 0)], with: .top)
             saveItems()
+            scheduleNotification(item, newIndex)
         }
     }
     
@@ -116,6 +118,7 @@ class ItemsTableViewController: UITableViewController {
             items.remove(at: indexPath.row)
             saveItems()
             tableView.deleteRows(at: [indexPath], with: .top)
+            unscheduleNotification(indexPath.row)
         }
     }
     
@@ -127,7 +130,7 @@ class ItemsTableViewController: UITableViewController {
         if isSuccessfulSave {
             os_log("Items successfully saved.", log: OSLog.default, type: .debug)
         } else {
-            os_log("Failed to save items...", log: OSLog.default, type: .error)
+            os_log("Failed to save items.", log: OSLog.default, type: .error)
         }
     }
     
@@ -137,7 +140,7 @@ class ItemsTableViewController: UITableViewController {
         if isSuccessfulSave {
             os_log("Item prototypes successfully saved.", log: OSLog.default, type: .debug)
         } else {
-            os_log("Failed to save item prototypes...", log: OSLog.default, type: .error)
+            os_log("Failed to save item prototypes.", log: OSLog.default, type: .error)
         }
     }
     
@@ -152,6 +155,32 @@ class ItemsTableViewController: UITableViewController {
     
     private func loadItemPrototypes() -> Set<ItemPrototype>? {
         return NSKeyedUnarchiver.unarchiveObject(withFile: ItemPrototype.ArchiveURL.path) as? Set<ItemPrototype>
+    }
+    
+    private func scheduleNotification(_ item: Item, _ index: Int) {
+        let content = UNMutableNotificationContent()
+        content.title = "Item About to Expire"
+        content.body = "\"\(item.name)\" is going to expire tomorrow."
+        content.sound = UNNotificationSound.default()
+    
+        let interval = (item.expiresAt - 1.day) - Date()
+        
+        if interval > 0 {
+            let trigger = UNTimeIntervalNotificationTrigger(timeInterval: interval, repeats: false)
+            let request = UNNotificationRequest(identifier: "ExpirationAlarm.\(index)", content: content, trigger: trigger)
+            let center = UNUserNotificationCenter.current()
+            
+            center.add(request) { (error : Error?) in
+                if let _ = error {
+                    os_log("Failed to schedule notification.", log: OSLog.default, type: .error)
+                }
+            }
+        }
+    }
+    
+    private func unscheduleNotification(_ index: Int) {
+        let center = UNUserNotificationCenter.current()
+        center.removePendingNotificationRequests(withIdentifiers: ["ExpirationAlarm.\(index)"])
     }
 }
 

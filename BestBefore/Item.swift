@@ -15,7 +15,6 @@ class Item: NSObject, NSCoding
     //MARK: Properties
     
     var name: String
-    var picture: UIImage?
     var expiresAt: Date
     
     //MARK: Archiving Paths
@@ -27,14 +26,12 @@ class Item: NSObject, NSCoding
     
     struct PropertyKey {
         static let name = "name"
-        static let picture = "picture"
         static let expiresAt = "expiresAt"
     }
     
-    public init(name: String, picture: UIImage?, expiresAt: Date)
+    public init(name: String, expiresAt: Date)
     {
         self.name = name
-        self.picture = picture
         self.expiresAt = expiresAt
     }
     
@@ -43,7 +40,6 @@ class Item: NSObject, NSCoding
     func encode(with aCoder: NSCoder)
     {
         aCoder.encode(self.name, forKey: PropertyKey.name)
-        aCoder.encode(self.picture, forKey: PropertyKey.picture)
         aCoder.encode(self.expiresAt, forKey: PropertyKey.expiresAt)
     }
     
@@ -58,9 +54,7 @@ class Item: NSObject, NSCoding
             return nil
         }
         
-        let picture = aDecoder.decodeObject(forKey: PropertyKey.picture) as? UIImage
-        
-        self.init(name: name, picture: picture, expiresAt: expiresAt)
+        self.init(name: name, expiresAt: expiresAt)
     }
 }
 

@@ -27,7 +27,6 @@ class ItemPrototype: NSObject, NSCoding
     //MARK: Properties
     
     var name: String
-    var picture: UIImage?
     var interval: TimeInterval
     var code: String
     
@@ -40,15 +39,13 @@ class ItemPrototype: NSObject, NSCoding
     
     struct PropertyKey {
         static let name = "name"
-        static let picture = "picture"
         static let interval = "interval"
         static let code = "code"
     }
     
-    public init(name: String, picture: UIImage?, interval: TimeInterval, code: String)
+    public init(name: String, interval: TimeInterval, code: String)
     {
         self.name = name
-        self.picture = picture
         self.interval = interval
         self.code = code
     }
@@ -58,7 +55,6 @@ class ItemPrototype: NSObject, NSCoding
     func encode(with aCoder: NSCoder)
     {
         aCoder.encode(self.name, forKey: PropertyKey.name)
-        aCoder.encode(self.picture, forKey: PropertyKey.picture)
         aCoder.encode(self.interval, forKey: PropertyKey.interval)
         aCoder.encode(self.code, forKey: PropertyKey.code)
     }
@@ -68,8 +64,6 @@ class ItemPrototype: NSObject, NSCoding
             os_log("Unable to decode the name for a ItemPrototype object.", log: OSLog.default, type: .debug)
             return nil
         }
-        
-        let picture = aDecoder.decodeObject(forKey: PropertyKey.picture) as? UIImage
         
         guard let code = aDecoder.decodeObject(forKey: PropertyKey.code) as? String else {
             os_log("Unable to decode the code for a ItemPrototype object.", log: OSLog.default, type: .debug)
@@ -83,7 +77,7 @@ class ItemPrototype: NSObject, NSCoding
             return nil
         }
         
-        self.init(name: name, picture: picture, interval: interval, code: code)
+        self.init(name: name, interval: interval, code: code)
     }
 }
 

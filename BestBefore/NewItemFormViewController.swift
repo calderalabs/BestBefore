@@ -29,16 +29,11 @@ class NewItemFormViewController: FormViewController, UINavigationControllerDeleg
             if let itemPrototype = itemPrototypes.first(where: { prototype in
                 return prototype.code == code
             }) {
-                let expiresAt = Date().startOfDay.addingTimeInterval(itemPrototype.interval)
-                
+                let expiresAt = Date().addingTimeInterval(itemPrototype.interval)
+
                 if let nameRow = (form.rowBy(tag: "nameRow") as? TextRow) {
                     nameRow.value = itemPrototype.name
                     nameRow.updateCell()
-                }
-                
-                if let pictureRow = (form.rowBy(tag: "pictureRow") as? ImageRow) {
-                    pictureRow.value = itemPrototype.picture
-                    pictureRow.updateCell()
                 }
                 
                 if let expirationDateRow = (form.rowBy(tag: "expirationDateRow") as? DateRow) {
@@ -74,7 +69,7 @@ class NewItemFormViewController: FormViewController, UINavigationControllerDeleg
         let monthsRow = self.form.rowBy(tag: "monthsRow") as? IntRow
         let yearsRow = self.form.rowBy(tag: "yearsRow") as? IntRow
         let row = form.rowBy(tag: "expirationDateRow") as! DateRow
-        let expirationInterval = row.value! - Date().startOfDay
+        let expirationInterval = row.value!.inDefaultRegion().startOfDay - Date().inDefaultRegion().startOfDay
         
         let components = expirationInterval.in([.day, .month, .year])
         self.shouldSkipOnChange = true
@@ -106,10 +101,6 @@ class NewItemFormViewController: FormViewController, UINavigationControllerDeleg
                     row.placeholder = "Enter product name here"
                     }.onChange{ row in
                         self.updateSaveButton()
-                    }
-                <<< ImageRow("pictureRow"){ row in
-                    row.title = "Picture"
-                    row.sourceTypes = [.Camera]
                     }
             +++ Section("Expiration")
                 <<< DateRow("expirationDateRow"){ row in
@@ -153,12 +144,11 @@ class NewItemFormViewController: FormViewController, UINavigationControllerDeleg
         }
         
         let name = (form.rowBy(tag: "nameRow") as! TextRow).value!
-        let picture = (form.rowBy(tag: "pictureRow") as! ImageRow).value
         let expiresAt = (form.rowBy(tag: "expirationDateRow") as! DateRow).value!
-        newItem = Item(name: name, picture: picture, expiresAt: expiresAt.startOfDay)
+        newItem = Item(name: name, expiresAt: expiresAt)
         
         if let code = code {
-            newItemPrototype = ItemPrototype(name: name, picture: picture, interval: expiresAt.startOfDay - Date().startOfDay, code: code)
+            newItemPrototype = ItemPrototype(name: name, interval: expiresAt - Date(), code: code)
         }
     }
     
@@ -166,7 +156,7 @@ class NewItemFormViewController: FormViewController, UINavigationControllerDeleg
         let days = (form.rowBy(tag: "daysRow") as? IntRow)?.value ?? 0
         let months = (form.rowBy(tag: "monthsRow") as? IntRow)?.value ?? 0
         let years = (form.rowBy(tag: "yearsRow") as? IntRow)?.value ?? 0
-        return ((days + 1).days + months.months + years.years).fromNow()!.startOfDay
+        return (days.days + months.months + years.years).fromNow()!
     }
     
     private func intervalRow(title: String, tag: String) -> IntRow {
