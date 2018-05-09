@@ -92,8 +92,9 @@ class NewItemFormViewController: FormViewController, UINavigationControllerDeleg
         super.viewDidLoad()
         
         form
-            +++ ButtonRow() { row in
-                    row.title = "Scan bar code"
+            +++ Section(footer: "Scanning the bar code is useful if you want to reuse previously entered items.")
+                <<< ButtonRow() { row in
+                    row.title = "Scan Bar Code"
                 }.onCellSelection({ (cell, row) in
                     let viewController = BarcodeScannerViewController()
                     viewController.codeDelegate = self
@@ -101,16 +102,19 @@ class NewItemFormViewController: FormViewController, UINavigationControllerDeleg
                     
                     self.present(viewController, animated: true, completion: nil)
                 })
+                <<< LabelRow("codeRow"){ row in
+                    row.title = "Bar Code"
+                    row.hidden = Condition.function(["codeRow"], { form in
+                        return (form.rowBy(tag: "codeRow") as? LabelRow)?.value == nil
+                    })
+                }
             +++ Section("Details")
                 <<< TextRow("nameRow"){ row in
                     row.title = "Name"
                     row.placeholder = "Enter product name here"
-                    }.onChange{ row in
-                        self.updateSaveButton()
-                    }
-                <<< LabelRow("codeRow"){ row in
-                    row.title = "Bar Code"
-                    }
+                }.onChange{ row in
+                    self.updateSaveButton()
+                }
             +++ Section("Expiration")
                 <<< DateRow("expirationDateRow"){ row in
                     row.title = "Expiration Date"

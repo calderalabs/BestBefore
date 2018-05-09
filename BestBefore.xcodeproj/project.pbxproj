@@ -10,6 +10,7 @@
 		476688422099FED100BA3CCB /* NewItemFormViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 476688412099FED100BA3CCB /* NewItemFormViewController.swift */; };
 		47668844209A027800BA3CCB /* ImageRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47668843209A027800BA3CCB /* ImageRow.swift */; };
 		47668846209A029A00BA3CCB /* ImagePickerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47668845209A029A00BA3CCB /* ImagePickerController.swift */; };
+		47F6AB4020A30D5D00FCC5CF /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 47F6AB3F20A30D5C00FCC5CF /* Default-568h@2x.png */; };
 		513BCDA72021AD1B004B8E09 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 513BCDA62021AD1B004B8E09 /* AppDelegate.swift */; };
 		513BCDAC2021AD1B004B8E09 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 513BCDAA2021AD1B004B8E09 /* Main.storyboard */; };
 		513BCDAE2021AD1B004B8E09 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 513BCDAD2021AD1B004B8E09 /* Assets.xcassets */; };
@@ -25,6 +26,7 @@
 		476688412099FED100BA3CCB /* NewItemFormViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewItemFormViewController.swift; sourceTree = "<group>"; };
 		47668843209A027800BA3CCB /* ImageRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageRow.swift; sourceTree = "<group>"; };
 		47668845209A029A00BA3CCB /* ImagePickerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePickerController.swift; sourceTree = "<group>"; };
+		47F6AB3F20A30D5C00FCC5CF /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		513BCDA32021AD1B004B8E09 /* BestBefore.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BestBefore.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		513BCDA62021AD1B004B8E09 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		513BCDAB2021AD1B004B8E09 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -83,6 +85,7 @@
 				513BCDBA2021B138004B8E09 /* GoogleService-Info.plist */,
 				513BCDA62021AD1B004B8E09 /* AppDelegate.swift */,
 				513BCDAA2021AD1B004B8E09 /* Main.storyboard */,
+				47F6AB3F20A30D5C00FCC5CF /* Default-568h@2x.png */,
 				513BCDAD2021AD1B004B8E09 /* Assets.xcassets */,
 				513BCDB22021AD1B004B8E09 /* Info.plist */,
 				513BCDBD2021B235004B8E09 /* ItemsTableViewController.swift */,
@@ -166,6 +169,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				513BCDBB2021B138004B8E09 /* GoogleService-Info.plist in Resources */,
+				47F6AB4020A30D5D00FCC5CF /* Default-568h@2x.png in Resources */,
 				513BCDAE2021AD1B004B8E09 /* Assets.xcassets in Resources */,
 				513BCDAC2021AD1B004B8E09 /* Main.storyboard in Resources */,
 			);
