@@ -59,9 +59,10 @@ class NewItemFormViewController: FormViewController, UINavigationControllerDeleg
     }
     
     private func updateSaveButton() {
-        let name = (form.rowBy(tag: "nameRow") as? TextRow)!
+        let nameRow = (form.rowBy(tag: "nameRow") as? TextRow)
+        let expirationDateRow = (form.rowBy(tag: "expirationDateRow") as? DateRow)
         
-        if let nameValue = name.value {
+        if let nameValue = nameRow?.value, let _ = expirationDateRow?.value {
             saveButton.isEnabled = nameValue != ""
         } else {
             saveButton.isEnabled = false
@@ -73,17 +74,18 @@ class NewItemFormViewController: FormViewController, UINavigationControllerDeleg
         let monthsRow = self.form.rowBy(tag: "monthsRow") as? IntRow
         let yearsRow = self.form.rowBy(tag: "yearsRow") as? IntRow
         let row = form.rowBy(tag: "expirationDateRow") as! DateRow
-        let expirationInterval = row.value!.inDefaultRegion().startOfDay - Date().inDefaultRegion().startOfDay
-        
-        let components = expirationInterval.in([.day, .month, .year])
-        self.shouldSkipOnChange = true
-        daysRow?.value = components[.day]
-        monthsRow?.value = components[.month]
-        yearsRow?.value = components[.year]
-        self.shouldSkipOnChange = false
-        daysRow?.updateCell()
-        monthsRow?.updateCell()
-        yearsRow?.updateCell()
+        if let rowValue = row.value {
+            let expirationInterval = rowValue.inDefaultRegion().startOfDay - Date().inDefaultRegion().startOfDay
+            let components = expirationInterval.in([.day, .month, .year])
+            self.shouldSkipOnChange = true
+            daysRow?.value = components[.day] == 0 ? nil : components[.day]
+            monthsRow?.value = components[.month] == 0 ? nil : components[.month]
+            yearsRow?.value = components[.year] == 0 ? nil : components[.year]
+            self.shouldSkipOnChange = false
+            daysRow?.updateCell()
+            monthsRow?.updateCell()
+            yearsRow?.updateCell()
+        }
     }
     
     override func viewDidLoad() {
@@ -112,14 +114,18 @@ class NewItemFormViewController: FormViewController, UINavigationControllerDeleg
             +++ Section("Expiration")
                 <<< DateRow("expirationDateRow"){ row in
                     row.title = "Expiration Date"
-                    row.value = Date().startOfDay + 1.day
                     row.minimumDate = Date().startOfDay + 1.day
                 }.onChange{ row in
                     if self.shouldSkipOnChange {
                         return
                     }
                     
+                    self.updateSaveButton()
                     self.updateIntervalRows()
+                }.onCellHighlightChanged{ cell, row in
+                    if !row.isHighlighted {
+                        row.value = row.value ?? row.minimumDate
+                    }
                 }
                 <<< intervalRow(title: "Days From Now", tag: "daysRow")
                 <<< intervalRow(title: "Months From Now", tag: "monthsRow")
@@ -169,7 +175,6 @@ class NewItemFormViewController: FormViewController, UINavigationControllerDeleg
     private func intervalRow(title: String, tag: String) -> IntRow {
         return IntRow(tag){ row in
             row.title = title
-            row.value = 0
         }.onChange{ row in
             if self.shouldSkipOnChange {
                 return
