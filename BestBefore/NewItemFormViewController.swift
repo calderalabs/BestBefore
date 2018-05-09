@@ -25,6 +25,10 @@ class NewItemFormViewController: FormViewController, UINavigationControllerDeleg
     func scanner(_ controller: BarcodeScannerViewController, didCaptureCode code: String, type: String) {
         self.code = code
         
+        let codeRow = (form.rowBy(tag: "codeRow") as? LabelRow)
+        codeRow?.value = code
+        codeRow?.updateCell()
+        
         if let itemPrototypes = itemPrototypes {
             if let itemPrototype = itemPrototypes.first(where: { prototype in
                 return prototype.code == code
@@ -87,7 +91,7 @@ class NewItemFormViewController: FormViewController, UINavigationControllerDeleg
         
         form
             +++ ButtonRow() { row in
-                    row.title = "Populate from bar code..."
+                    row.title = "Scan bar code"
                 }.onCellSelection({ (cell, row) in
                     let viewController = BarcodeScannerViewController()
                     viewController.codeDelegate = self
@@ -101,6 +105,9 @@ class NewItemFormViewController: FormViewController, UINavigationControllerDeleg
                     row.placeholder = "Enter product name here"
                     }.onChange{ row in
                         self.updateSaveButton()
+                    }
+                <<< LabelRow("codeRow"){ row in
+                    row.title = "Bar Code"
                     }
             +++ Section("Expiration")
                 <<< DateRow("expirationDateRow"){ row in
