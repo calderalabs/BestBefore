@@ -188,6 +188,7 @@ class NewItemFormViewController: FormViewController, UINavigationControllerDeleg
             expirationDateRow?.value = self.computeAbsoluteDate()
             expirationDateRow?.updateCell()
             self.shouldSkipOnChange = false
+            self.updateSaveButton()
         }
     }
     

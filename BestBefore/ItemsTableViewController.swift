@@ -18,7 +18,7 @@ class ItemTableViewCell: UITableViewCell {
         if expiresAt > Date() {
             let expirationInterval = expiresAt - Date()
             let days = expirationInterval.in(.day)!
-            detailTextLabel?.text = "Expires in: \(days + 1) days"
+            detailTextLabel?.text = "Expires in \(days + 1) days"
         } else {
             detailTextLabel?.text = "Expired!"
         }
