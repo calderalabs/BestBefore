@@ -91,8 +91,32 @@ class NewItemFormViewController: FormViewController, UINavigationControllerDeleg
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        func defaultSetupSection(_ text: String) -> ((Section) -> ()) {
+            return { section in
+                var header = HeaderFooterView<UITableViewHeaderFooterView>(.class)
+                header.height = {UITableViewAutomaticDimension}
+                header.onSetupView = { view, section in
+                    view.textLabel?.numberOfLines = 0
+                    view.textLabel?.font = AppDelegate.font?.withSize(14)
+                    view.textLabel?.text = text.uppercased()
+                }
+                
+                section.header = header
+            }
+        }
+        
         form
-            +++ Section(footer: "Next time you scan the bar code we will use it to fill out the form for you.")
+            +++ Section(){ section in
+                var footer = HeaderFooterView<UITableViewHeaderFooterView>(.class)
+                footer.height = {UITableViewAutomaticDimension}
+                footer.onSetupView = { view, section in
+                    view.textLabel?.numberOfLines = 0
+                    view.textLabel?.font = AppDelegate.font?.withSize(14)
+                    view.textLabel?.text = "Next time you scan the bar code we will use it to fill out the form for you."
+                }
+                
+                section.footer = footer
+            }
                 <<< ButtonRow() { row in
                     row.title = "Scan Bar Code"
                 }.onCellSelection({ (cell, row) in
@@ -107,15 +131,15 @@ class NewItemFormViewController: FormViewController, UINavigationControllerDeleg
                     row.hidden = Condition.function(["codeRow"], { form in
                         return (form.rowBy(tag: "codeRow") as? LabelRow)?.value == nil
                     })
-                }
-            +++ Section("Details")
+                    }
+            +++ Section(defaultSetupSection("Details"))
                 <<< TextRow("nameRow"){ row in
                     row.title = "Name"
                     row.placeholder = "Enter product name here"
                 }.onChange{ row in
                     self.updateSaveButton()
                 }
-            +++ Section("Expiration")
+            +++ Section(defaultSetupSection("Expiration"))
                 <<< DateRow("expirationDateRow"){ row in
                     row.title = "Expiration Date"
                     row.minimumDate = Date().startOfDay + 1.day
