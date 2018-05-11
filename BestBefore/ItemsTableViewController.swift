@@ -19,8 +19,10 @@ class ItemTableViewCell: UITableViewCell {
             let expirationInterval = expiresAt - Date()
             let days = expirationInterval.in(.day)!
             detailTextLabel?.text = "Expires in \(days + 1) days"
+            detailTextLabel?.textColor = UIColor.darkGray
         } else {
-            detailTextLabel?.text = "Expired!"
+            detailTextLabel?.text = "Expired"
+            detailTextLabel?.textColor = UIColor.red
         }
     }
 }
@@ -163,7 +165,8 @@ class ItemsTableViewController: UITableViewController {
         content.body = "\"\(item.name)\" is going to expire tomorrow."
         content.sound = UNNotificationSound.default()
     
-        let interval = (item.expiresAt - 1.day) - Date()
+        let time = (item.expiresAt - 1.day)
+        let interval = (time.atTime(hour: 8, minute: 0, second: 0) ?? time) - Date()
         
         if interval > 0 {
             let trigger = UNTimeIntervalNotificationTrigger(timeInterval: interval, repeats: false)

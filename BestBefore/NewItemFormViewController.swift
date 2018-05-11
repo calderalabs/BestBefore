@@ -92,7 +92,7 @@ class NewItemFormViewController: FormViewController, UINavigationControllerDeleg
         super.viewDidLoad()
         
         form
-            +++ Section(footer: "Scanning the bar code is useful if you want to reuse previously entered items.")
+            +++ Section(footer: "Next time you scan the bar code we will use it to fill out the form for you.")
                 <<< ButtonRow() { row in
                     row.title = "Scan Bar Code"
                 }.onCellSelection({ (cell, row) in
