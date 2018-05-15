@@ -155,9 +155,10 @@ class NewItemFormViewController: FormViewController, UINavigationControllerDeleg
                         row.value = row.value ?? row.minimumDate
                     }
                 }
-                <<< intervalRow(title: "Days From Now", tag: "daysRow")
-                <<< intervalRow(title: "Months From Now", tag: "monthsRow")
-                <<< intervalRow(title: "Years From Now", tag: "yearsRow")
+            +++ Section(defaultSetupSection("From Now"))
+                <<< intervalRow(title: "Days", tag: "daysRow")
+                <<< intervalRow(title: "Months", tag: "monthsRow")
+                <<< intervalRow(title: "Years", tag: "yearsRow")
         
         
         updateSaveButton()
@@ -203,6 +204,7 @@ class NewItemFormViewController: FormViewController, UINavigationControllerDeleg
     private func intervalRow(title: String, tag: String) -> IntRow {
         return IntRow(tag){ row in
             row.title = title
+            row.placeholder = "Enter number of \(title.lowercased())"
         }.onChange{ row in
             if self.shouldSkipOnChange {
                 return
