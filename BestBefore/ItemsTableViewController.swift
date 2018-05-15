@@ -10,6 +10,7 @@ import UIKit
 import SwiftDate
 import os.log
 import UserNotifications
+import UIEmptyState
 
 class ItemTableViewCell: UITableViewCell {
     var expiresAt: Date!
@@ -27,7 +28,7 @@ class ItemTableViewCell: UITableViewCell {
     }
 }
 
-class ItemsTableViewController: UITableViewController {
+class ItemsTableViewController: UITableViewController, UIEmptyStateDataSource, UIEmptyStateDelegate {
     private var items = [Item]()
     private var itemPrototypes = Set<ItemPrototype>()
     
@@ -45,10 +46,39 @@ class ItemsTableViewController: UITableViewController {
         }
     }
     
+    // MARK: Empty State Delegate
+    
+    func emptyStateViewWillShow(view: UIView) {
+        guard let emptyView = view as? UIEmptyStateView else { return }
+        emptyView.button.layer.cornerRadius = 5
+        emptyView.button.layer.backgroundColor = AppDelegate.color.cgColor
+    }
+    
+    func emptyStatebuttonWasTapped(button: UIButton) {
+        performSegue(withIdentifier: "AddItem", sender: self)
+    }
+    
+    var emptyStateTitle = NSAttributedString(string: "There are no items to display.")
+    var emptyStateButtonTitle: NSAttributedString? {
+        let attrs = [NSAttributedStringKey.foregroundColor: UIColor.white,
+                     NSAttributedStringKey.font: AppDelegate.boldFont!]
+        return NSAttributedString(string: "Add Your First Item", attributes: attrs)
+    }
+    
+    var emptyStateButtonSize: CGSize? {
+        return CGSize(width: 180, height: 40)
+    }
+
+    
     //MARK: initialization
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        self.emptyStateDataSource = self
+        self.emptyStateDelegate = self
+        self.tableView.tableFooterView = UIView(frame: CGRect.zero)
+        self.reloadEmptyState()
         
         if let savedItems = loadItems() {
             items += savedItems
@@ -58,7 +88,6 @@ class ItemsTableViewController: UITableViewController {
             itemPrototypes = savedItemPrototypes
         }
     }
-    
     
     //MARK: timer
     
@@ -118,8 +147,8 @@ class ItemsTableViewController: UITableViewController {
         if indexPath.row < items.count
         {
             items.remove(at: indexPath.row)
-            saveItems()
             tableView.deleteRows(at: [indexPath], with: .top)
+            saveItems()
             unscheduleNotification(indexPath.row)
         }
     }
@@ -128,6 +157,8 @@ class ItemsTableViewController: UITableViewController {
     
     private func saveItems() {
         let isSuccessfulSave = NSKeyedArchiver.archiveRootObject(items, toFile: Item.ArchiveURL.path)
+        
+        self.reloadEmptyState()
         
         if isSuccessfulSave {
             os_log("Items successfully saved.", log: OSLog.default, type: .debug)
