@@ -11,6 +11,7 @@ import SwiftDate
 import os.log
 import UserNotifications
 import UIEmptyState
+import BarcodeScanner
 
 class ItemTableViewCell: UITableViewCell {
     var expiresAt: Date!
@@ -28,9 +29,34 @@ class ItemTableViewCell: UITableViewCell {
     }
 }
 
-class ItemsTableViewController: UITableViewController, UIEmptyStateDataSource, UIEmptyStateDelegate {
+class ItemsTableViewController: UITableViewController, UIEmptyStateDataSource, UIEmptyStateDelegate, BarcodeScannerCodeDelegate, BarcodeScannerDismissalDelegate {
     private var items = [Item]()
     private var itemPrototypes = Set<ItemPrototype>()
+    private var barcodeScannerViewController: BarcodeScannerViewController?
+    
+    @IBAction func addItem(_ sender: Any) {
+        let viewController = BarcodeScannerViewController()
+        viewController.codeDelegate = self
+        viewController.dismissalDelegate = self
+        viewController.headerViewController.closeButton.titleLabel?.font = AppDelegate.boldFont
+        viewController.headerViewController.closeButton.tintColor = UIColor.white
+        viewController.headerViewController.titleLabel.font = AppDelegate.boldFont!.withSize(17)
+        viewController.headerViewController.titleLabel.textColor = UIColor.white
+        viewController.headerViewController.navigationBar.barTintColor = AppDelegate.color
+        
+        let skipButton = UIButton(type: .system)
+        skipButton.setTitle("Skip", for: UIControlState())
+        skipButton.titleLabel?.font = AppDelegate.boldFont
+        skipButton.tintColor = UIColor.white
+        skipButton.sizeToFit()
+        skipButton.addTarget(self, action: #selector(handleSkipButtonTap), for: .touchUpInside)
+        
+        viewController.headerViewController.navigationBar.items?[0].rightBarButtonItem = UIBarButtonItem(customView: skipButton)
+        viewController.messageViewController.textLabel.font = AppDelegate.font?.withSize(14)
+        
+        barcodeScannerViewController = viewController
+        self.present(viewController, animated: true, completion: nil)
+    }
     
     @IBAction func unwindFromModal(unwindSegue: UIStoryboardSegue) {
         if let sourceViewController = unwindSegue.source as? NewItemFormViewController, let item = sourceViewController.newItem {
@@ -46,6 +72,28 @@ class ItemsTableViewController: UITableViewController, UIEmptyStateDataSource, U
         }
     }
     
+    @objc func handleSkipButtonTap(_ sender: UIButton) {
+        barcodeScannerViewController?.dismiss(animated: false, completion: nil)
+        barcodeScannerViewController = nil
+        let newItemController = storyboard?.instantiateViewController(withIdentifier: "NewItemController") as! NewItemFormViewController
+        navigationController?.pushViewController(newItemController, animated: true)
+    }
+    
+    // MARK: Barcode Scanner Delegate
+    
+    func scannerDidDismiss(_ controller: BarcodeScannerViewController) {
+        controller.dismiss(animated: true, completion: nil)
+        barcodeScannerViewController = nil
+    }
+    
+    func scanner(_ controller: BarcodeScannerViewController, didCaptureCode code: String, type: String) {
+        controller.dismiss(animated: false, completion: nil)
+        barcodeScannerViewController = nil
+        let newItemController = storyboard?.instantiateViewController(withIdentifier: "NewItemController") as! NewItemFormViewController
+        newItemController.code = code
+        navigationController?.pushViewController(newItemController, animated: true)
+    }
+    
     // MARK: Empty State Delegate
     
     func emptyStateViewWillShow(view: UIView) {
@@ -55,10 +103,15 @@ class ItemsTableViewController: UITableViewController, UIEmptyStateDataSource, U
     }
     
     func emptyStatebuttonWasTapped(button: UIButton) {
-        performSegue(withIdentifier: "AddItem", sender: self)
+        addItem(button)
     }
     
-    var emptyStateTitle = NSAttributedString(string: "There are no items to display.")
+    var emptyStateTitle: NSAttributedString {
+        let attrs = [NSAttributedStringKey.foregroundColor: UIColor.black,
+                     NSAttributedStringKey.font: AppDelegate.font!]
+        return NSAttributedString(string: "There are no items to display.", attributes: attrs)
+    }
+    
     var emptyStateButtonTitle: NSAttributedString? {
         let attrs = [NSAttributedStringKey.foregroundColor: UIColor.white,
                      NSAttributedStringKey.font: AppDelegate.boldFont!]
@@ -78,7 +131,6 @@ class ItemsTableViewController: UITableViewController, UIEmptyStateDataSource, U
         self.emptyStateDataSource = self
         self.emptyStateDelegate = self
         self.tableView.tableFooterView = UIView(frame: CGRect.zero)
-        self.reloadEmptyState()
         
         if let savedItems = loadItems() {
             items += savedItems
@@ -87,6 +139,9 @@ class ItemsTableViewController: UITableViewController, UIEmptyStateDataSource, U
         if let savedItemPrototypes = loadItemPrototypes() {
             itemPrototypes = savedItemPrototypes
         }
+        
+        self.tableView.reloadData()
+        self.reloadEmptyState()
     }
     
     //MARK: timer

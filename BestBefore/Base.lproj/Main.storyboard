@@ -52,7 +52,7 @@
                         <barButtonItem key="rightBarButtonItem" systemItem="add" id="LTw-gt-mFt">
                             <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <connections>
-                                <segue destination="b2c-wP-eJL" kind="presentation" identifier="AddItem" id="fqf-hZ-Cu3"/>
+                                <action selector="addItem:" destination="VKv-qR-cAW" id="eqn-eO-kV9"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
@@ -111,7 +111,7 @@
         <!--Add Item-->
         <scene sceneID="aGX-dY-50T">
             <objects>
-                <viewController id="Dgk-Fx-JBr" customClass="NewItemFormViewController" customModule="BestBefore" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="NewItemController" id="Dgk-Fx-JBr" customClass="NewItemFormViewController" customModule="BestBefore" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="PAR-HH-Qcy">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="603"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -122,13 +122,12 @@
                         <barButtonItem key="leftBarButtonItem" systemItem="cancel" id="gjz-0e-fYG">
                             <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <connections>
-                                <action selector="cancel:" destination="Dgk-Fx-JBr" id="VIW-s6-WBg"/>
+                                <segue destination="Lr8-rc-JpT" kind="unwind" unwindAction="unwindFromModalWithUnwindSegue:" id="a6o-Gf-Vu2"/>
                             </connections>
                         </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" systemItem="save" id="vRH-9h-a7s">
                             <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <connections>
-                                <action selector="save:" destination="Dgk-Fx-JBr" id="9fl-nQ-FzO"/>
                                 <segue destination="Lr8-rc-JpT" kind="unwind" unwindAction="unwindFromModalWithUnwindSegue:" id="7O1-E9-2bh"/>
                             </connections>
                         </barButtonItem>

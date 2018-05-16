@@ -9,54 +9,13 @@
 import UIKit
 import Eureka
 import SwiftDate
-import BarcodeScanner
 
-class NewItemFormViewController: FormViewController, UINavigationControllerDelegate, BarcodeScannerCodeDelegate, BarcodeScannerDismissalDelegate {
+class NewItemFormViewController: FormViewController, UINavigationControllerDelegate {
     @IBOutlet weak var saveButton: UIBarButtonItem!
     var newItem: Item?
     var newItemPrototype: ItemPrototype?
     var code: String?
     var itemPrototypes: Set<ItemPrototype>?
-    
-    func scannerDidDismiss(_ controller: BarcodeScannerViewController) {
-        controller.dismiss(animated: true, completion: nil)
-    }
-    
-    func scanner(_ controller: BarcodeScannerViewController, didCaptureCode code: String, type: String) {
-        self.code = code
-        
-        let codeRow = (form.rowBy(tag: "codeRow") as? LabelRow)
-        codeRow?.value = code
-        codeRow?.updateCell()
-        
-        if let itemPrototypes = itemPrototypes {
-            if let itemPrototype = itemPrototypes.first(where: { prototype in
-                return prototype.code == code
-            }) {
-                let expiresAt = Date().addingTimeInterval(itemPrototype.interval)
-
-                if let nameRow = (form.rowBy(tag: "nameRow") as? TextRow) {
-                    nameRow.value = itemPrototype.name
-                    nameRow.updateCell()
-                }
-                
-                if let expirationDateRow = (form.rowBy(tag: "expirationDateRow") as? DateRow) {
-                    expirationDateRow.value = expiresAt
-                    expirationDateRow.updateCell()
-                }
-            }
-        }
-        
-        controller.dismiss(animated: false, completion: nil)
-    }
-    
-    @IBAction func cancel(_ sender: UIBarButtonItem) {
-        dismiss(animated: true, completion: nil)
-    }
-    
-    @IBAction func save(_ sender: UIBarButtonItem) {
-        dismiss(animated: true, completion: nil)
-    }
     
     private func updateSaveButton() {
         let nameRow = (form.rowBy(tag: "nameRow") as? TextRow)
@@ -106,32 +65,6 @@ class NewItemFormViewController: FormViewController, UINavigationControllerDeleg
         }
         
         form
-            +++ Section(){ section in
-                var footer = HeaderFooterView<UITableViewHeaderFooterView>(.class)
-                footer.height = {UITableViewAutomaticDimension}
-                footer.onSetupView = { view, section in
-                    view.textLabel?.numberOfLines = 0
-                    view.textLabel?.font = AppDelegate.font?.withSize(14)
-                    view.textLabel?.text = "Next time you scan the bar code we will use it to fill out the form for you."
-                }
-                
-                section.footer = footer
-            }
-                <<< ButtonRow() { row in
-                    row.title = "Scan Bar Code"
-                }.onCellSelection({ (cell, row) in
-                    let viewController = BarcodeScannerViewController()
-                    viewController.codeDelegate = self
-                    viewController.dismissalDelegate = self
-                    
-                    self.present(viewController, animated: true, completion: nil)
-                })
-                <<< LabelRow("codeRow"){ row in
-                    row.title = "Bar Code"
-                    row.hidden = Condition.function(["codeRow"], { form in
-                        return (form.rowBy(tag: "codeRow") as? LabelRow)?.value == nil
-                    })
-                    }
             +++ Section(defaultSetupSection("Details"))
                 <<< TextRow("nameRow"){ row in
                     row.title = "Name"
@@ -141,7 +74,7 @@ class NewItemFormViewController: FormViewController, UINavigationControllerDeleg
                 }
             +++ Section(defaultSetupSection("Expiration"))
                 <<< DateRow("expirationDateRow"){ row in
-                    row.title = "Expiration Date"
+                    row.title = "Date"
                     row.minimumDate = Date().startOfDay + 1.day
                 }.onChange{ row in
                     if self.shouldSkipOnChange {
@@ -161,12 +94,30 @@ class NewItemFormViewController: FormViewController, UINavigationControllerDeleg
                 <<< intervalRow(title: "Years", tag: "yearsRow")
         
         
-        updateSaveButton()
-        updateIntervalRows()
-        
         if let savedItemPrototypes = loadItemPrototypes() {
             itemPrototypes = savedItemPrototypes
         }
+        
+        if let code = code, let itemPrototypes = itemPrototypes {
+            if let itemPrototype = itemPrototypes.first(where: { prototype in
+                return prototype.code == code
+            }) {
+                let expiresAt = Date().addingTimeInterval(itemPrototype.interval)
+                
+                if let nameRow = (form.rowBy(tag: "nameRow") as? TextRow) {
+                    nameRow.value = itemPrototype.name
+                    nameRow.updateCell()
+                }
+                
+                if let expirationDateRow = (form.rowBy(tag: "expirationDateRow") as? DateRow) {
+                    expirationDateRow.value = expiresAt
+                    expirationDateRow.updateCell()
+                }
+            }
+        }
+        
+        updateSaveButton()
+        updateIntervalRows()
     }
     
     private func loadItemPrototypes() -> Set<ItemPrototype>? {
