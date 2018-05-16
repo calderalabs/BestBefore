@@ -68,7 +68,7 @@ class NewItemFormViewController: FormViewController, UINavigationControllerDeleg
             +++ Section(defaultSetupSection("Details"))
                 <<< TextRow("nameRow"){ row in
                     row.title = "Name"
-                    row.placeholder = "Enter product name here"
+                    row.placeholder = "Enter product name"
                 }.onChange{ row in
                     self.updateSaveButton()
                 }
